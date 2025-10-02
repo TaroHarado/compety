@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Compety</title>
+<meta name="description" content="Taxty">
+<link rel="icon" type="image/svg+xml" href="fav.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+ 
+
+</head>
+<body x-data="characterBuilder()" x-init="init()">
+  <div class="noise-overlay"></div>
+
+  <audio id="click-sound" src="https://raw.githubusercontent.com/qasagava/Taxty/de73f14d9412fad6ab0e7deb053621e24f2915b1/knopka-klik-myagkii-blizkii-nizkii.mp3"
+></audio>
+
+
+<!-- Верхняя панель -->
+<div class="top-custom-block" x-data="{ show: false }">
+  <div class="top-row">
+    <h1 class="top-title">Compety</h1>
+    <div class="top-buttons">
+      <a href="https://x.com/compety_sol" target="_blank" class="blue-btn">
+  <img src="Frame.svg" alt="Twitter" class="x" />
+</a>
+      <a href="index.html#" class="blue-btn" @click.prevent="show = true">INFO</a>
+    </div>
+  </div>
+
+  <!-- Попап -->
+  <div
+    class="popup"
+    x-show="show"
+    x-transition.opacity
+    x-cloak
+  >
+    <div class="popup-content">
+      <button class="popup-close" @click="show = false">×</button>
+      <p>
+        Welcome to Compety!<br><br>
+        Generate your unique avatar in 2 clicks.<br><br>
+        Simple. Fast. Yours.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- Категории НАД всем -->
+<div class="category-grid">
+  <template x-for="layer in layerOrder" :key="layer">
+    <button
+      class="category-btn"
+      :class="{ active: activeCategory === layer }"
+      @click="playClickSound(); toggleCategory(layer)"
+    >
+      <span x-text="layer"></span>
+    </button>
+  </template>
+</div>
+
+<!-- Основной layout -->
+<div class="layout">
+
+  <!-- Превью -->
+  <div class="preview-wrapper">
+<div class="preview" id="preview">
+  <!-- Заглушка -->
+  <template x-if="showInitialAsset">
+    <img :src="initialAsset" class="layer" alt="initial">
+  </template>
+
+  <!-- Основные слои -->
+  <template x-for="layer in layerOrder" :key="layer">
+    <img :src="selected[layer]" class="layer" :alt="layer" x-show="selected[layer]">
+  </template>
+</div>
+
+  </div>
+
+  <!-- Панель управления -->
+  <div class="controls-panel">
+
+    <!-- Выпадающее окно вариантов -->
+    <div
+      class="variant-panel"
+      :class="{ 'visible': isPanelVisible, 'hidden': !isPanelVisible }"
+      x-cloak
+    >
+      <h2 x-text="activeCategory" class="panel-title"></h2>
+
+      <div class="option-grid">
+
+        <template x-if="activeCategory === 'Hand'">
+          <label class="empty-toggle">
+            <input type="checkbox" @change="toggleHandLayer" :checked="!selected['Hand']">
+            <span>Empty</span>
+          </label>
+        </template>
+
+        <template x-for="(url, index) in assets[activeCategory]" :key="index">
+          <img :src="url"
+               :class="{'selected': selected[activeCategory] === url}"
+               @click="playClickSound(); select(activeCategory, url)">
+        </template>
+
+      </div>
+         <div class="buttons">
+  <button @click="animateDice($refs.diceIcon); randomize()">
+    <span x-ref="diceIcon" class="dice-icon">🎲</span>
+    <span>Random</span>
+  </button>
+  <button @click="downloadImage()">Save PNG</button>
+  <button @click="copyImage()">Copy PERSON</button> <!-- ← Новая кнопка -->
+</div>
+    </div>
+
+        <div class="buttons">
+  <button @click="animateDice($refs.diceIcon); randomize()">
+    <span x-ref="diceIcon" class="dice-icon">🎲</span>
+    <span>Random</span>
+  </button>
+  <button @click="downloadImage()">Save PNG</button>
+  <button @click="copyImage()">Copy PERSON</button> <!-- ← Новая кнопка -->
+</div>
+
+
+  </div>
+</div>
+
+
+
+
+ <div class="bottom-custom-block">
+  <div class="bottom-row">
+    
+    <!-- TWEET -->
+    <div class="tweet-wrapper">
+      <a
+        id="tweet-button"
+        class="blue-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        TWEET
+      </a>
+    </div>
+
+    <!-- Адрес + COPY -->
+<div class="contract-container">
+  <div class="contract-display">
+    <span class="contract-text" id="contract-text">CA</span>
+  </div>
+  <button class="blue-btn small" onclick="copyAddress()">COPY</button>
+</div>
+
+
+
+
+
+ 
+
+<div x-data="preloader()" x-show="isVisible" x-transition.opacity.duration.1000ms class="preloader" x-cloak></div>
+
+
+
+
+  <script src="script.js"></script>
+</body>
+</html>
